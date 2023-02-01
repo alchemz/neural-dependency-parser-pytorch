@@ -74,12 +74,12 @@ class ParserModel(nn.Module):
         ### See the PDF for hints.
         # (1) delcaration
         self.embed_to_hidden_weight = nn.Parameter(torch.empty(self.embed_size * n_features, hidden_size))
-        self.embed_to_hidden_bias = nn.Parameter((torch.empty(hidden_size)))
+        self.embed_to_hidden_bias = nn.Parameter(torch.empty(hidden_size))
         # (2) construction
         self.dropout = nn.Dropout(dropout_prob)
         # (3) declaration
-        self.hidden_to_logits_weight = nn.Parameter((torch.empty(hidden_size, n_classes)))
-        self.hidden_to_logits_bias = nn.Parameter((torch.empty(n_classes)))
+        self.hidden_to_logits_weight = nn.Parameter(torch.empty(hidden_size, n_classes))
+        self.hidden_to_logits_bias = nn.Parameter(torch.empty(n_classes))
 
         # (3) initialize weight and bias
         nn.init.xavier_uniform_(self.embed_to_hidden_weight)
