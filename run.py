@@ -27,7 +27,7 @@ args = parser.parse_args()
 # -----------------
 # Primary Functions
 # -----------------
-def train(parser, train_data, dev_data, output_path, batch_size=1024, n_epochs=10, lr=0.0005):
+def train(parser, train_data, dev_data, output_path, batch_size=1024, n_epochs=15, lr=0.0005):
     """ Train the neural dependency parser.
 
     @param parser (Parser): Neural Dependency Parser
@@ -53,7 +53,9 @@ def train(parser, train_data, dev_data, output_path, batch_size=1024, n_epochs=1
     ###     Adam Optimizer: https://pytorch.org/docs/stable/optim.html
     ###     Cross Entropy Loss: https://pytorch.org/docs/stable/nn.html#crossentropyloss
 
-
+    # add optimizer and loss func
+    optimizer = optim.Adam(parser.model.parameters())
+    loss_func = nn.CrossEntropyLoss()
 
     ### END YOUR CODE
 
@@ -106,8 +108,14 @@ def train_for_epoch(parser, train_data, dev_data, optimizer, loss_func, batch_si
             ### Please see the following docs for support:
             ###     Optimizer Step: https://pytorch.org/docs/stable/optim.html#optimizer-step
 
-
-
+            # (1) run train_x forward
+            logits = parser.model.forward(train_x)
+            # (2) crossentropy loss
+            loss = loss_func(logits, target = train_y)
+            # (3) backprop losses
+            loss.backward()
+            # (4) step with optimizer
+            optimizer.step()
 
             ### END YOUR CODE
             prog.update(1)
@@ -146,7 +154,7 @@ if __name__ == "__main__":
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    train(parser, train_data, dev_data, output_path, batch_size=1024, n_epochs=10, lr=0.0005)
+    train(parser, train_data, dev_data, output_path, batch_size=1024, n_epochs=30, lr=0.001)
 
     if not debug:
         print(80 * "=")
